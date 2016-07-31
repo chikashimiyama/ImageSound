@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7E87451E0634216B32B3E5C55F043A18528D7311",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "89EC939148DF5B01DEF16D5BAE581F3D5560271C" : 0,
+    "7E87451E0634216B32B3E5C55F043A18528D7311" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "BC2509C6-2C38-49CE-8D82-35A99959E654",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "89EC939148DF5B01DEF16D5BAE581F3D5560271C" : "..\/..\/addons\/ofxPd",
+    "7E87451E0634216B32B3E5C55F043A18528D7311" : "ImageSound\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ImageSound",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ImageSound.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/chikashimiyama\/ImageSound.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7E87451E0634216B32B3E5C55F043A18528D7311"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/danomatika\/ofxPd.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "89EC939148DF5B01DEF16D5BAE581F3D5560271C"
+    }
+  ]
+}
