@@ -3,6 +3,12 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    players.emplace_back(ofColor::green, 16, *this);
+    players.emplace_back(ofColor::orange, 32, *this );
+    players.emplace_back(ofColor::red, 48, *this);
+    players.emplace_back(ofColor::blue, 96, *this);
+    
+    
     ofBackground(ofColor::white);
     vector<ofVideoDevice> devices = videoCamera.listDevices();
     
@@ -17,10 +23,13 @@ void ofApp::setup(){
     videoCamera.setDeviceID(0);
     videoCamera.initGrabber(ofGetWidth(), ofGetHeight());
     
-    score.allocate(ofGetWidth(), ofGetHeight(), OF_PIXELS_RGB);
+    colorImage.allocate(ofGetWidth(), ofGetHeight());
+    grayImage.allocate(ofGetWidth(), ofGetHeight());
+    score.allocate(kWidth, kHeight, OF_PIXELS_GRAY);
+
+    
+    score.setColor(ofColor::white);
     scoreTexture.allocate(score);
-    processedScore.allocate(ofGetWidth(), ofGetHeight(), OF_PIXELS_RGB);
-    processedTexture.allocate(processedScore);
 
     ofSetVerticalSync(true);
     font.load("Arial.ttf", 20);
@@ -41,29 +50,62 @@ void ofApp::setup(){
     pd.openPatch("sonify.pd");
     mode = Mode::wait;
     
-    players.emplace_back(Cell(0,0, ofColor::red));
-    players.emplace_back(Cell(0,0, ofColor::blue));
-    players.emplace_back(Cell(0,0, ofColor::orange));
+}
 
+
+ofPixels &ofApp::getScore(){
+    return score;
+}
+
+void ofApp::addCollision(ofPoint position, Player &player){
+    collisions.emplace_front(position,player);
+}
+
+#pragma mark update
+
+void ofApp::scoreAnalysis(){
+    grayImage.contrastStretch();
+    ofPixels & pixels = grayImage.getPixels();
+    for(int y = 0; y < ofGetHeight()-1; y++){
+        int offset = y * ofGetWidth();
+        for(int x = 0; x < ofGetWidth(); x++){
+            int hoffset = offset+x;
+            if(abs(pixels[hoffset+1] - pixels[hoffset]) > 10 ||
+               abs(pixels[hoffset+ofGetWidth()] - pixels[hoffset]) > 10){
+                score[hoffset]  = (abs(pixels[hoffset+1] - pixels[hoffset]) + abs(pixels[hoffset+ofGetWidth()] - pixels[hoffset])) * 10 ;
+            }else{
+                score[hoffset] = 255;
+            }
+        }
+        
+    }
+    
+    scoreTexture.loadData(score);
+    const unsigned char * data = score.getData();
+    imageData.clear();
+    for(int i = 0 ; i < score.size(); i++){
+        imageData.push_back(static_cast<float>(255-data[i]));
+    }
+    pd.writeArray("imageData", imageData);
+    
     
 }
 
 
-
-//--------------------------------------------------------------
 void ofApp::update(){
     
     switch(mode){
         case Mode::wait:{
+            
             videoCamera.update();
+            colorImage = videoCamera.getPixels();
+            grayImage = colorImage;
             break;
         }
         case Mode::capture:{
-            score = videoCamera.getPixels();
             scoreAnalysis();
             
             
-            scoreTexture.loadData(score);
             mode = Mode::transition;
             alpha = 0.0;
             break;
@@ -77,97 +119,15 @@ void ofApp::update(){
             break;
         }
         case Mode::sonification:{
-            processedScore = score;
-            processedTexture.loadData(processedScore);
+            for(auto &player:players){player.update();}
+            for(auto &collision: collisions){collision.update();}
+            collisions.remove_if([](Collision &collision){ return collision.getDead();});
             break;
         }
     }
 }
 
-void ofApp::scoreAnalysis(){
-    std::vector<float> hue;
-    std::vector<float> saturation;
-    std::vector<float> brightness;
-    std::vector<float> detail;
-    
-    ofColor prevColor;
-    for(int i = 0 ; i < kNumVerticalCells; i++){
-        for(int j = 0; j < kNumHorizontalCells; j++){
-
-            int vOffset = kCellSize * i;
-            int hOffset = kCellSize * j;
-            float avgHue =0.0, avgSat =0.0, avgBrit =0.0, avgDetail = 0.0;
-            for(int k = 0; k < kCellSize; k++){
-            
-                for (int l = 0; l < kCellSize; l++){
-                    float hue, saturation, brightness;
-//                    ofLog() << ofToString(hOffset+l) + " " << ofToString(vOffset+k);
-                    ofColor color = score.getColor(hOffset+l, vOffset+k);
-                    color.getHsb(hue, saturation, brightness);
-                    avgHue += hue;
-                    avgSat += saturation;
-                    avgBrit += brightness;
-                
-                    if(l != 0){
-                        int colorDef = abs(color.r - prevColor.r);
-                        colorDef += abs(color.g - prevColor.g);
-                        colorDef += abs(color.b - prevColor.b);
-                        colorDef /= 3;
-                        avgDetail += static_cast<float>(colorDef);
-                    }
-                    prevColor = color;
-                }
-            }
-            avgHue /= 4096;
-            avgSat /= 4096;
-            avgBrit /= 4096;
-            avgDetail /= 4096;
-            
-            ofLog() << "cell " << ofToString(j) << " " << ofToString(i) << ": " <<
-            ofToString(avgHue) << " " << ofToString(avgSat)<< " " << ofToString(avgBrit) << " " << ofToString(avgDetail);
-            
-            hue.emplace_back(avgHue);
-            saturation.emplace_back(avgHue);
-            brightness.emplace_back(avgBrit);
-            detail.emplace_back(avgDetail);
-        }
-    }
-    
-    pd.writeArray("hue", hue);
-    pd.writeArray("saturation", saturation);
-    pd.writeArray("brightness", brightness);
-    pd.writeArray("detail", detail);
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){
-    switch (mode) {
-        case Mode::wait:{
-            ofSetColor(ofColor::white);
-            videoCamera.draw(0, 0);
-            drawTextRegion();
-            drawMessage();
-            break;
-        }
-        case Mode::capture:{
-            break;
-        }
-        case Mode::transition:{
-            ofSetColor(ofFloatColor(1,1,1,alpha));
-            scoreTexture.draw(0, 0);
-            break;
-        }
-        case Mode::sonification:{
-            ofSetColor(ofFloatColor(1,1,1,alpha));
-            processedTexture.draw(0,0);
-            drawMatrix();
-            drawPlayer();
-            break;
-        }
-        default:
-            break;
-    }
-}
+#pragma mark draw
 
 void ofApp::drawTextRegion(){
     ofSetColor(ofColor(0,0,200,100));
@@ -190,45 +150,77 @@ void ofApp::drawMatrix(){
     }
 }
 
-void ofApp::drawPlayer(){
-    
-    ofNoFill();
-    ofSetLineWidth(2);
 
-    for( auto &&player : players){
-        ofSetColor(player.color);
-        ofDrawRectangle(player.x *kCellSize, player.y*kCellSize, kCellSize, kCellSize);
-    }
+void ofApp::drawPlayer(){
+    for(auto &player:players){player.draw();}
+}
+
+void ofApp::drawCollisions(){
+    for(auto &collision:collisions){collision.draw();}
 }
 
 void ofApp::drawMessage(){
     ofSetColor(ofColor::white);
-
     std::string message = ofToString(waitTime);
-    
     float width = font.stringWidth(message);
     font.drawString(message, (ofGetWidth() - width) / 2, ofGetHeight()/2);
 }
 
+void ofApp::draw(){
+    switch (mode) {
+        case Mode::wait:{
+            ofSetColor(ofColor::white);
+            grayImage.draw(0, 0);
+            drawTextRegion();
+            drawMessage();
+            break;
+        }
+        case Mode::capture:{
+            break;
+        }
+        case Mode::transition:{
+            ofSetColor(ofFloatColor(1,1,1,alpha));
+            scoreTexture.draw(0, 0);
+            break;
+        }
+        case Mode::sonification:{
+            ofSetColor(ofFloatColor(1,1,1,alpha));
+            scoreTexture.draw(0, 0);
+            drawPlayer();
+            drawCollisions();
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+#pragma mark Pd
 void ofApp::receiveMessage(const std::string &dest, const std::string &msg, const pd::List &list){
     
     if(msg == "waitTime"){
         waitTime = static_cast<int>(list.getFloat(0));
-        if(waitTime == 0){
-            mode = Mode::capture;
-        }
+        if(waitTime == 0){ mode = Mode::capture; }
     }else if(msg == "player"){
         int id = static_cast<int>(list.getFloat(0));
-        int x = static_cast<int>(list.getFloat(1));
-        int y =static_cast<int>(list.getFloat(2));
-        players[id].x = x;
-        players[id].y = y;
-
+        std::string descriptor = list.getSymbol(1);
+        int value = static_cast<int>(list.getFloat(2));
+        if(descriptor == "position"){
+            players[id].setPositionFromIndex(value);
+        }else if(descriptor == "direction"){
+            players[id].setDirection(static_cast<bool>(value));
+        }else if(descriptor == "active"){
+            players[id].setActive(static_cast<bool>(value));
+        }
     }
 }
 
+void ofApp::print(const std::string &msg){
+    ofLog() << msg;
+}
+
 void ofApp::keyPressed(int key){
-    
+
 }
 void ofApp::keyReleased(int key){
     
