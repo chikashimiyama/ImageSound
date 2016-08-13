@@ -21,10 +21,10 @@ void ofApp::setup(){
     }
     
     videoCamera.setDeviceID(0);
-    videoCamera.initGrabber(ofGetWidth(), ofGetHeight());
+    videoCamera.initGrabber(kWidth, kHeight);
     
-    colorImage.allocate(ofGetWidth(), ofGetHeight());
-    grayImage.allocate(ofGetWidth(), ofGetHeight());
+    colorImage.allocate(kWidth, kHeight);
+    grayImage.allocate(kWidth, kHeight);
     score.allocate(kWidth, kHeight, OF_PIXELS_GRAY);
 
     
@@ -50,6 +50,8 @@ void ofApp::setup(){
     pd.openPatch("sonify.pd");
     mode = Mode::wait;
     
+    ofSetFullscreen(true);
+    
 }
 
 
@@ -66,13 +68,13 @@ void ofApp::addCollision(ofPoint position, Player &player){
 void ofApp::scoreAnalysis(){
     grayImage.contrastStretch();
     ofPixels & pixels = grayImage.getPixels();
-    for(int y = 0; y < ofGetHeight()-1; y++){
-        int offset = y * ofGetWidth();
-        for(int x = 0; x < ofGetWidth(); x++){
+    for(int y = 0; y < kHeight-1; y++){
+        int offset = y * kWidth;
+        for(int x = 0; x < kWidth; x++){
             int hoffset = offset+x;
             if(abs(pixels[hoffset+1] - pixels[hoffset]) > 10 ||
-               abs(pixels[hoffset+ofGetWidth()] - pixels[hoffset]) > 10){
-                score[hoffset]  = (abs(pixels[hoffset+1] - pixels[hoffset]) + abs(pixels[hoffset+ofGetWidth()] - pixels[hoffset])) * 10 ;
+               abs(pixels[hoffset+kWidth] - pixels[hoffset]) > 10){
+                score[hoffset]  = (abs(pixels[hoffset+1] - pixels[hoffset]) + abs(pixels[hoffset+kWidth] - pixels[hoffset])) * 10 ;
             }else{
                 score[hoffset] = 255;
             }
@@ -132,7 +134,7 @@ void ofApp::update(){
 void ofApp::drawTextRegion(){
     ofSetColor(ofColor(0,0,200,100));
     ofFill();
-    ofDrawRectangle(0, ofGetHeight()/2 - 50, ofGetWidth(), 100);
+    ofDrawRectangle(0, kHeight/2 - 50, kWidth, 100);
 }
 
 void ofApp::drawMatrix(){
@@ -140,12 +142,12 @@ void ofApp::drawMatrix(){
     ofSetColor(ofColor::black);
     int offset = 64;
     for(int i = 0; i < 16; i++){
-        ofDrawLine(offset, 0, offset, ofGetHeight());
+        ofDrawLine(offset, 0, offset, kHeight);
         offset += 64;
     }
     offset = 64;
     for(int i = 0; i < 12; i++){
-        ofDrawLine(0, offset, ofGetWidth(), offset);
+        ofDrawLine(0, offset, kWidth, offset);
         offset += 64;
     }
 }
@@ -163,7 +165,7 @@ void ofApp::drawMessage(){
     ofSetColor(ofColor::white);
     std::string message = ofToString(waitTime);
     float width = font.stringWidth(message);
-    font.drawString(message, (ofGetWidth() - width) / 2, ofGetHeight()/2);
+    font.drawString(message, (kWidth - width) / 2, kHeight/2);
 }
 
 void ofApp::draw(){
