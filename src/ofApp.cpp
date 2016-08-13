@@ -5,8 +5,8 @@
 void ofApp::setup(){
     players.emplace_back(ofColor::green, 16, *this);
     players.emplace_back(ofColor::orange, 32, *this );
-    players.emplace_back(ofColor::red, 48, *this);
-    players.emplace_back(ofColor::blue, 96, *this);
+    players.emplace_back(ofColor::red, 64, *this);
+    players.emplace_back(ofColor::blue, 128, *this);
     
     
     ofBackground(ofColor::white);
@@ -212,6 +212,8 @@ void ofApp::receiveMessage(const std::string &dest, const std::string &msg, cons
         }else if(descriptor == "active"){
             players[id].setActive(static_cast<bool>(value));
         }
+    }else if(msg == "reset"){
+        mode = Mode::wait;
     }
 }
 
