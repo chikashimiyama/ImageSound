@@ -1,6 +1,6 @@
 #include "ofMain.h"
 #include "ofApp.h"
-#include "const.hpp"
+#include "const.h"
 
 //========================================================================
 int main( ){
