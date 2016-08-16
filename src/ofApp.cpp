@@ -38,7 +38,14 @@ void ofApp::setup(){
     
     int ticksPerBuffer = 8; // 8 * 64 = buffer len of 512
     
-    ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
+    
+    // device selection
+    ofSoundStream stream;
+    stream.printDeviceList();
+    stream.setDeviceID(2); // here
+    stream.setup(this, 2, 0, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
+
+    // ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
     if(!pd.init(2, 0, 44100, ticksPerBuffer, false)) {
         OF_EXIT_APP(1);
     }
