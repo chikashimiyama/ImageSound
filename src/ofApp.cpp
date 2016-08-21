@@ -7,7 +7,9 @@ void ofApp::setup(){
     players.emplace_back(ofColor::orange, 32, *this );
     players.emplace_back(ofColor::red, 64, *this);
     players.emplace_back(ofColor::blue, 128, *this);
-    
+    players.emplace_back(ofColor::purple, 8, *this);
+    players.emplace_back(ofColor::lightGray, 768, *this);
+
     
     ofBackground(ofColor::white);
     vector<ofVideoDevice> devices = videoCamera.listDevices();
@@ -39,13 +41,7 @@ void ofApp::setup(){
     int ticksPerBuffer = 8; // 8 * 64 = buffer len of 512
     
     
-    // device selection
-    ofSoundStream stream;
-    stream.printDeviceList();
-    stream.setDeviceID(2); // here
-    stream.setup(this, 2, 0, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
-
-    // ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
+     ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
     if(!pd.init(2, 0, 44100, ticksPerBuffer, false)) {
         OF_EXIT_APP(1);
     }
@@ -57,7 +53,7 @@ void ofApp::setup(){
     pd.openPatch("sonify.pd");
     mode = Mode::wait;
     
-    ofSetFullscreen(true);
+    //ofSetFullscreen(true);
     
 }
 
@@ -75,19 +71,17 @@ void ofApp::addCollision(ofPoint position, Player &player){
 void ofApp::scoreAnalysis(){
     grayImage.contrastStretch();
     ofPixels & pixels = grayImage.getPixels();
+    score.set(255);
     for(int y = 0; y < kHeight-1; y++){
         int offset = y * kWidth;
-        for(int x = 0; x < kWidth; x++){
+        for(int x = 0; x < kWidth-1; x++){
             int hoffset = offset+x;
-            if(abs(pixels[hoffset+1] - pixels[hoffset]) > 10 ||
-               abs(pixels[hoffset+kWidth] - pixels[hoffset]) > 10){
+            if(abs(pixels[hoffset+1] - pixels[hoffset]) > 10 || abs(pixels[hoffset+kWidth] - pixels[hoffset]) > 10){
                 score[hoffset]  = (abs(pixels[hoffset+1] - pixels[hoffset]) + abs(pixels[hoffset+kWidth] - pixels[hoffset])) * 10 ;
-            }else{
-                score[hoffset] = 255;
             }
         }
-        
     }
+
     
     scoreTexture.loadData(score);
     const unsigned char * data = score.getData();
