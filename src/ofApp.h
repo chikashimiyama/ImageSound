@@ -52,7 +52,7 @@ protected:
     ofxCvColorImage colorImage;
     ofxCvGrayscaleImage grayImage;
     ofPixels score;
-    
+    ofSoundStream soundStream;
     ofTexture scoreTexture;
     ofTrueTypeFont font;
     ofxPd pd;
