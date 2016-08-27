@@ -1,6 +1,6 @@
 #include "ofApp.h"
 #include "ofxPd.h"
-
+#include "Externals.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
     players.emplace_back(ofColor::green, 16, *this);
@@ -47,8 +47,8 @@ void ofApp::setup(){
     if(!pd.init(2, 0, 44100, ticksPerBuffer, false)) {
         OF_EXIT_APP(1);
     }
-
-    
+    slide_tilde_setup();
+    edge_tilde_setup();    
     pd.addReceiver(*this);
     pd.subscribe("toOF");
     pd.start();

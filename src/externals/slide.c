@@ -4,7 +4,7 @@
 
 #include "m_pd.h"
 #include "shared.h"
-#include "sic.h"
+#include "sickle/sic.h"
 
 #define SLIDE_DEFUP  1.
 #define SLIDE_DEFDN  1.
