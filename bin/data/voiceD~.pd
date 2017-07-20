@@ -1,4 +1,4 @@
-#N canvas 115 117 844 508 10;
+#N canvas 115 117 820 839 10;
 #X obj 132 239 tabread~ imageData;
 #X obj 230 333 /~ 256;
 #X obj 29 454 *~;

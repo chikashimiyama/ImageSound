@@ -30,6 +30,12 @@
 #X obj 110 300 * 130, f 6;
 #X obj 270 306 slide~ 200 5000;
 #X obj 370 270 *~ 5000;
+#X obj 531 239 sig~;
+#X floatatom 534 212 5 0 0 0 - - -, f 5;
+#X obj 497 428 threshold~ 0.001 0 0.001 0;
+#X obj 504 522 switch~;
+#X msg 499 473 1;
+#X msg 535 474 0;
 #X connect 0 0 1 0;
 #X connect 1 0 2 1;
 #X connect 1 0 2 0;
@@ -67,4 +73,10 @@
 #X connect 27 0 3 0;
 #X connect 28 0 5 0;
 #X connect 29 0 3 1;
+#X connect 29 0 33 0;
 #X connect 30 0 29 2;
+#X connect 31 0 1 0;
+#X connect 32 0 31 0;
+#X connect 33 0 35 0;
+#X connect 33 1 36 0;
+#X connect 36 0 34 0;

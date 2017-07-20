@@ -15,7 +15,7 @@
 #X obj 303 263 f \$1;
 #X obj 298 231 t b b;
 #X obj 297 201 loadbang;
-#X obj 54 212 osc~ 920;
+#X obj 323 391 osc~ 920;
 #X obj 174 45 receive~ indexE;
 #X obj 414 28 r voiceE;
 #X obj 108 337 throw~ submixE;
