@@ -1,19 +1,35 @@
 #include "ofApp.h"
 #include "ofxPd.h"
 #include "Externals.h"
-//--------------------------------------------------------------
+
 void ofApp::setup(){
+    ofSetDataPathRoot("../Resources/data/");
+
+    ofBackground(ofColor::white);
+    playerSetup();
+    videoSetup();
+    pixelSetup();
+    soundSetup();
+    ofSetVerticalSync(true);
+    font.load("Arial.ttf", 20);
+    waitTime = 5;
+    mode = Mode::wait;
+    shader.load("shaders/shader");
+
+    //ofSetFullscreen(true);
+}
+
+void ofApp::playerSetup(){
     players.emplace_back(ofColor::green, 16, *this);
     players.emplace_back(ofColor::orange, 32, *this );
     players.emplace_back(ofColor::red, 64, *this);
     players.emplace_back(ofColor::blue, 128, *this);
     players.emplace_back(ofColor::purple, 8, *this);
     players.emplace_back(ofColor::lightGray, 768, *this);
+}
 
-    
-    ofBackground(ofColor::white);
+void ofApp::videoSetup(){
     vector<ofVideoDevice> devices = videoCamera.listDevices();
-    
     for(int i = 0; i < devices.size(); i++){
         if(devices[i].bAvailable){
             ofLogNotice() << devices[i].id << ": " << devices[i].deviceName;
@@ -21,44 +37,30 @@ void ofApp::setup(){
             ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
         }
     }
-    
     videoCamera.setDeviceID(0);
     videoCamera.initGrabber(kWidth, kHeight);
-    
-    colorImage.allocate(kWidth, kHeight);
-    grayImage.allocate(kWidth, kHeight);
-    score.allocate(kWidth, kHeight, OF_PIXELS_GRAY);
+    captureScaling.x = kWidth / videoCamera.getWidth();
+    captureScaling.y = kHeight/ videoCamera.getHeight();
+}
 
-    
-    score.setColor(ofColor::white);
-    scoreTexture.allocate(score);
+void ofApp::pixelSetup(){
+    scalerFbo.allocate(kWidth, kHeight);
+    score.allocate(kWidth, kHeight, OF_IMAGE_GRAYSCALE); // 1 channel
+}
 
-    ofSetVerticalSync(true);
-    font.load("Arial.ttf", 20);
-    waitTime = 10;
-    
-    
+void ofApp::soundSetup(){
     int ticksPerBuffer = 8; // 8 * 64 = buffer len of 512
-    
-    soundStream.printDeviceList();
-    soundStream.setDeviceID(2);
-    //     ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
-    soundStream.setup(this, 2,0, 44100, ofxPd::blockSize() * ticksPerBuffer, 3);
+    ofSoundStreamSetup(2, 0, this, 44100, ofxPd::blockSize()*ticksPerBuffer, 3);
     if(!pd.init(2, 0, 44100, ticksPerBuffer, false)) {
         OF_EXIT_APP(1);
     }
     slide_tilde_setup();
-    edge_tilde_setup();    
+    edge_tilde_setup();
+    pd.openPatch("sonify.pd");
     pd.addReceiver(*this);
     pd.subscribe("toOF");
     pd.start();
-    pd.openPatch("sonify.pd");
-    mode = Mode::wait;
-    
-    //ofSetFullscreen(true);
-    
 }
-
 
 ofPixels &ofApp::getScore(){
     return score;
@@ -69,50 +71,29 @@ void ofApp::addCollision(ofPoint position, Player &player){
 }
 
 #pragma mark update
-
 void ofApp::scoreAnalysis(){
-    grayImage.contrastStretch();
-    ofPixels & pixels = grayImage.getPixels();
-    score.set(255);
-    for(int y = 0; y < kHeight-1; y++){
-        int offset = y * kWidth;
-        for(int x = 0; x < kWidth-1; x++){
-            int hoffset = offset+x;
-            if(abs(pixels[hoffset+1] - pixels[hoffset]) > 10 || abs(pixels[hoffset+kWidth] - pixels[hoffset]) > 10){
-                score[hoffset]  = (abs(pixels[hoffset+1] - pixels[hoffset]) + abs(pixels[hoffset+kWidth] - pixels[hoffset])) * 10 ;
-            }
-        }
-    }
-
+    ofImage screenImage;
+    screenImage.grabScreen(0, 0, kWidth, kHeight); // always RGB unsigned char
+    const ofPixels &pixels = screenImage.getPixels(); // RGB unsigned char
+    score = pixels.getChannel(0); // get r channel
     
-    scoreTexture.loadData(score);
-    const unsigned char * data = score.getData();
-    imageData.clear();
-    for(int i = 0 ; i < score.size(); i++){
-        imageData.push_back(static_cast<float>(255-data[i]));
+    
+    imageData.clear(); // Mono unsigned char
+    for(int i = 0 ; i < score.size(); i++){ // check only red channel
+        imageData.push_back(255.0 - static_cast<float>(score[i]));
     }
     pd.writeArray("imageData", imageData);
-    
-    
 }
-
 
 void ofApp::update(){
     
     switch(mode){
         case Mode::wait:{
-            
-            videoCamera.update();
-            colorImage = videoCamera.getPixels();
-            grayImage = colorImage;
+            grabImage();
             break;
         }
         case Mode::capture:{
-            scoreAnalysis();
-            
-            
-            mode = Mode::transition;
-            alpha = 0.0;
+
             break;
         }
         case Mode::transition:{
@@ -130,6 +111,19 @@ void ofApp::update(){
             break;
         }
     }
+}
+
+void ofApp::grabImage(){
+    videoCamera.update();
+    const ofTexture &texture = videoCamera.getTexture();
+
+    scalerFbo.begin();
+    ofClear(0);
+    ofScale(captureScaling.x, captureScaling.y);
+    shader.begin();
+    texture.draw(0,0);
+    shader.end();
+    scalerFbo.end();
 }
 
 #pragma mark draw
@@ -155,7 +149,6 @@ void ofApp::drawMatrix(){
     }
 }
 
-
 void ofApp::drawPlayer(){
     for(auto &player:players){player.draw();}
 }
@@ -175,22 +168,28 @@ void ofApp::draw(){
     switch (mode) {
         case Mode::wait:{
             ofSetColor(ofColor::white);
-            grayImage.draw(0, 0);
+            scalerFbo.draw(0,0);
             drawTextRegion();
             drawMessage();
             break;
         }
         case Mode::capture:{
+            ofSetColor(ofColor::white);
+            scalerFbo.draw(0,0);
+            scoreAnalysis();
+            mode = Mode::transition;
+            alpha = 0.0;
             break;
         }
         case Mode::transition:{
             ofSetColor(ofFloatColor(1,1,1,alpha));
-            scoreTexture.draw(0, 0);
+            scalerFbo.draw(0,0);
+
             break;
         }
         case Mode::sonification:{
             ofSetColor(ofFloatColor(1,1,1,alpha));
-            scoreTexture.draw(0, 0);
+            scalerFbo.draw(0,0);
             drawPlayer();
             drawCollisions();
             break;
@@ -226,19 +225,10 @@ void ofApp::print(const std::string &msg){
     ofLog() << msg;
 }
 
-void ofApp::keyPressed(int key){
-
-}
-void ofApp::keyReleased(int key){
-    
-}
-
-//--------------------------------------------------------------
 void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
     pd.audioIn(input, bufferSize, nChannels);
 }
 
-//--------------------------------------------------------------
 void ofApp::audioOut(float * output, int bufferSize, int nChannels) {
     pd.audioOut(output, bufferSize, nChannels);
 }

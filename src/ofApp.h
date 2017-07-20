@@ -13,12 +13,11 @@
 class ofApp : public ofBaseApp, public pd::PdReceiver{
 
 public:
+
 	void setup();
 	void update();
 	void draw();
 
-	void keyPressed(int key);
-	void keyReleased(int key);
     void audioIn(float * input, int bufferSize, int nChannels);
     void audioOut(float * input, int bufferSize, int nChannels);
     
@@ -41,6 +40,12 @@ protected:
         ofColor color;
         Cell(int x, int y, ofColor color):x(x),y(y), color(color){}
     };
+    void playerSetup();
+    void videoSetup();
+    void pixelSetup();
+    void soundSetup();
+    
+    void grabImage();
     
     void drawTextRegion();
     void drawMessage();
@@ -48,12 +53,11 @@ protected:
     void drawPlayer();
     void drawCollisions();
     void scoreAnalysis();
-    ofVideoGrabber videoCamera;
-    ofxCvColorImage colorImage;
-    ofxCvGrayscaleImage grayImage;
+    
+    ofFbo scalerFbo;
     ofPixels score;
+    ofVideoGrabber videoCamera;
     ofSoundStream soundStream;
-    ofTexture scoreTexture;
     ofTrueTypeFont font;
     ofxPd pd;
     
@@ -63,6 +67,8 @@ protected:
     Mode mode;
     float alpha;
     
+    ofVec2f captureScaling;
+    ofShader shader;
     std::vector<float> imageData;
     std::vector<Player> players;
     std::forward_list<Collision> collisions;
