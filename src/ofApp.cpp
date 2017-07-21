@@ -15,7 +15,7 @@ void ofApp::setup(){
     waitTime = 5;
     mode = Mode::wait;
     shader.load("shaders/shader");
-
+    ofSetFrameRate(30);
     //ofSetFullscreen(true);
 }
 
