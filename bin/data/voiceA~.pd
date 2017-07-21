@@ -1,6 +1,6 @@
 #N canvas 177 98 571 439 10;
 #X obj 75 331 *~;
-#X obj 172 70 * 1024;
+#X obj 319 236 * 1024;
 #X obj 319 178 f \$1;
 #X obj 75 362 throw~ submixA;
 #X obj 75 281 osc~;
@@ -9,7 +9,7 @@
 #X obj 318 53 route direction;
 #X obj 317 78 t b f;
 #X obj 373 115 sel 0 1;
-#X msg 396 162 1, f 6;
+#X msg 425 198 1, f 6;
 #X msg 374 194 1024, f 6;
 #X obj 75 145 loadbang;
 #X obj 75 179 f \$1;

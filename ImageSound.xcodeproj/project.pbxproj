@@ -37,6 +37,10 @@
 		5472CCBDC7B6C1AF21661319 /* s_main.c in Sources */ = {isa = PBXBuildFile; fileRef = F96600F815252113425D4E74 /* s_main.c */; };
 		60CEF052E3D03AF6216E6390 /* x_acoustics.c in Sources */ = {isa = PBXBuildFile; fileRef = 2EE5752FE9F3922F36D2C46B /* x_acoustics.c */; };
 		621081631D55258200728323 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621081621D55258200728323 /* Player.cpp */; };
+		6222ED331F1F5B9F00C024FA /* edge.c in Sources */ = {isa = PBXBuildFile; fileRef = 6222ED311F1F5B9F00C024FA /* edge.c */; };
+		6222ED341F1F5B9F00C024FA /* slide.c in Sources */ = {isa = PBXBuildFile; fileRef = 6222ED321F1F5B9F00C024FA /* slide.c */; };
+		62B4AF1F1F1F534E002F390A /* sic.c in Sources */ = {isa = PBXBuildFile; fileRef = 62B4AF1D1F1F534E002F390A /* sic.c */; };
+		62B4AF221F1F535A002F390A /* loud.c in Sources */ = {isa = PBXBuildFile; fileRef = 62B4AF201F1F535A002F390A /* loud.c */; };
 		63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6151136D101F857DAE12722 /* ofxCvImage.cpp */; };
 		65DA614285C35696FE4C302E /* g_scalar.c in Sources */ = {isa = PBXBuildFile; fileRef = FE5C604568BC1ECAE7CAD2E6 /* g_scalar.c */; };
 		660D59CA6EF233EBCBCD8EFA /* s_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = 8B905A5EABF3B68295D011FE /* s_loader.c */; };
@@ -244,6 +248,13 @@
 		621081611D55248300728323 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		621081621D55258200728323 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		621081641D55263700728323 /* Collision.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collision.h; sourceTree = "<group>"; };
+		6222ED311F1F5B9F00C024FA /* edge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = edge.c; path = externals/edge.c; sourceTree = "<group>"; };
+		6222ED321F1F5B9F00C024FA /* slide.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = slide.c; path = externals/slide.c; sourceTree = "<group>"; };
+		62B4AF1B1F1F5346002F390A /* shared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = shared.h; path = externals/shared.h; sourceTree = "<group>"; };
+		62B4AF1D1F1F534E002F390A /* sic.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sic.c; path = externals/sickle/sic.c; sourceTree = "<group>"; };
+		62B4AF1E1F1F534E002F390A /* sic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sic.h; path = externals/sickle/sic.h; sourceTree = "<group>"; };
+		62B4AF201F1F535A002F390A /* loud.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loud.c; path = externals/common/loud.c; sourceTree = "<group>"; };
+		62B4AF211F1F535A002F390A /* loud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loud.h; path = externals/common/loud.h; sourceTree = "<group>"; };
 		63152EF07846DECD2854B62C /* utility.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = utility.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/utility.hpp; sourceTree = SOURCE_ROOT; };
 		665780A3005496E3A4A0D9EF /* compat.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = compat.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/legacy/compat.hpp; sourceTree = SOURCE_ROOT; };
 		674D3AA2CD9DDA6D5EFF577B /* d_ctl.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 30; name = d_ctl.c; path = "../../../addons/ofxPd/libs/libpd/pure-data/src/d_ctl.c"; sourceTree = SOURCE_ROOT; };
@@ -722,6 +733,20 @@
 			name = choice;
 			sourceTree = "<group>";
 		};
+		62B4AF191F1F533B002F390A /* pd */ = {
+			isa = PBXGroup;
+			children = (
+				6222ED311F1F5B9F00C024FA /* edge.c */,
+				6222ED321F1F5B9F00C024FA /* slide.c */,
+				62B4AF201F1F535A002F390A /* loud.c */,
+				62B4AF211F1F535A002F390A /* loud.h */,
+				62B4AF1D1F1F534E002F390A /* sic.c */,
+				62B4AF1E1F1F534E002F390A /* sic.h */,
+				62B4AF1B1F1F5346002F390A /* shared.h */,
+			);
+			name = pd;
+			sourceTree = "<group>";
+		};
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1147,6 +1172,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				62B4AF191F1F533B002F390A /* pd */,
 				621081621D55258200728323 /* Player.cpp */,
 				621081611D55248300728323 /* Player.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -1263,7 +1289,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy default icon file into App/Resources\nrsync -aved \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy libfmod and change install directory for fmod to run\nrsync -aved ../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\";\ninstall_name_tool -change @executable_path/libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n# Copy GLUT framework (must remove for AppStore submissions)\nrsync -aved ../../../libs/glut/lib/osx/GLUT.framework \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\"\n";
+			shellScript = "mkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy default icon file into App/Resources\nrsync -aved \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy libfmod and change install directory for fmod to run\nrsync -aved ../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\";\ninstall_name_tool -change @executable_path/libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n# Copy GLUT framework (must remove for AppStore submissions)\nrsync -aved ../../../libs/glut/lib/osx/GLUT.framework \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\"\n\ncp -r bin/data \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources\";\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1278,6 +1304,8 @@
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
+				62B4AF221F1F535A002F390A /* loud.c in Sources */,
+				6222ED341F1F5B9F00C024FA /* slide.c in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
@@ -1293,6 +1321,7 @@
 				621081631D55258200728323 /* Player.cpp in Sources */,
 				E94A9217ADCDF72404752237 /* z_libpd.c in Sources */,
 				A7F75B701E2BF4C71379D4A4 /* bob~.c in Sources */,
+				6222ED331F1F5B9F00C024FA /* edge.c in Sources */,
 				90F3886C34910F6655634FDB /* bonk~.c in Sources */,
 				AB6A1E0EB79546A10936EAC0 /* choice.c in Sources */,
 				1D7B9BAA73D029B7D342BD10 /* fiddle~.c in Sources */,
@@ -1371,6 +1400,7 @@
 				F8AF00EAEC60DB3BA134C090 /* x_net.c in Sources */,
 				8A66555E250D916BE02C75B9 /* x_scalar.c in Sources */,
 				3F70DB86E9F4E6AC4EE70C3A /* x_text.c in Sources */,
+				62B4AF1F1F1F534E002F390A /* sic.c in Sources */,
 				1C52472095475952DF505D99 /* x_time.c in Sources */,
 				DAF420C3195DE839D5F3154B /* x_vexp.c in Sources */,
 				6985D2AAF8DBDFCA9D8839C1 /* x_vexp_fun.c in Sources */,
@@ -1595,6 +1625,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
+				GCC_PREPROCESSOR_DEFINITIONS = MACOSX;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
@@ -1668,6 +1699,7 @@
 					../../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/externals\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1685,6 +1717,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = NONE;
+				GCC_PREPROCESSOR_DEFINITIONS = MACOSX;
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
@@ -1758,6 +1791,7 @@
 					../../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/externals\"";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
 			};

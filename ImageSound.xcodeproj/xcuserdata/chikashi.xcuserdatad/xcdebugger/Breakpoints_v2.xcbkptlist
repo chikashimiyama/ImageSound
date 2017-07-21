@@ -2,4 +2,67 @@
 <Bucket
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../libs/openFrameworks/gl/ofFbo.h"
+            timestampString = "522165146.033039"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ofFbo::Settings::~Settings()"
+                  moduleName = "ImageSoundDebug"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/chikashi/Development/of_v0.9.8_osx_release/apps/myApps/RhythmOfShapes/../../../libs/openFrameworks/gl/ofFbo.h"
+                  timestampString = "522236988.872169"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ofFbo::Settings::~Settings()"
+                  moduleName = "ImageSoundDebug"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/chikashi/Development/of_v0.9.8_osx_release/apps/myApps/RhythmOfShapes/../../../libs/openFrameworks/gl/ofFbo.h"
+                  timestampString = "522236988.873993"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ofFbo::setUseTexture(bool)"
+                  moduleName = "ImageSoundDebug"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/chikashi/Development/of_v0.9.8_osx_release/libs/openFrameworksCompiled/project/osx/../../../../libs/openFrameworks/gl/ofFbo.h"
+                  timestampString = "522236988.875798"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "4">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
